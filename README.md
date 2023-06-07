@@ -8,11 +8,12 @@ The code is not meant to be run locally because of the need for sensitive API ke
 
 ## How tos
 
+Run `npm install` before all these commands.
+
 ### Format code
 
 ```bash
-❯ npm install
-❯ npm fmt
+❯ npm run fmt
 ```
 
 ### Lint code
@@ -20,6 +21,13 @@ The code is not meant to be run locally because of the need for sensitive API ke
 Linting checks for common bugs.
 
 ```bash
-❯ npm install
-❯ npm lint
+❯ npm run lint
+```
+
+### Run the script
+
+You will have to set all relevant environment variables for this to work. Consider using [direnv](https://direnv.net) and an .envrc file. Be careful to never share this file!
+
+```bash
+❯ npm start
 ```

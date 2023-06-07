@@ -1,6 +1,7 @@
 {
   "name": "organization-dashboard",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "fmt": "prettier --write .",
@@ -8,9 +9,12 @@
     "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
+    "eslint": "^8.42.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint": "^8.42.0",
     "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2"
   }
 }
