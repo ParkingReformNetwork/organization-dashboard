@@ -6,13 +6,20 @@ import { log } from "./utils.js";
 import mapProjects from "./mapProjects.js";
 
 const readArgv = () =>
-  yargs(hideBin(process.argv)).option("services", {
-    alias: "s",
-    type: "array",
-    default: [],
-    choices: ["map-projects"],
-    description: "Specify the services to scrape",
-  }).argv;
+  yargs(hideBin(process.argv))
+    .option("services", {
+      alias: "s",
+      type: "array",
+      default: [],
+      choices: ["map-projects"],
+      description: "Specify the services to scrape",
+    })
+    .option("dry-run", {
+      alias: "d",
+      type: "boolean",
+      default: false,
+      description: "Don't write results to InfluxDB",
+    }).argv;
 
 const readEnvVars = () => {
   const expected = [
@@ -58,11 +65,15 @@ const getPoints = async (argv) => {
 const main = async () => {
   const argv = readArgv();
   const envVars = readEnvVars();
-  const influx = setUpInflux(envVars);
 
   const result = await getPoints(argv);
   log(`Result: ${result}`);
 
+  if (argv.dryRun) {
+    return;
+  }
+
+  const influx = setUpInflux(envVars);
   influx.writePoints(result);
   await influx.close();
   log("InfluxDB write finished.");
