@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "fmt": "prettier --write .",
     "fix": "prettier --write .; eslint --fix .",
     "lint": "prettier --check . && eslint ."
@@ -15,6 +15,9 @@
     "prettier": "^2.8.8"
   },
   "dependencies": {
-    "@influxdata/influxdb-client": "^1.33.2"
+    "@influxdata/influxdb-client": "^1.33.2",
+    "axios": "^1.4.0",
+    "papaparse": "^5.4.1",
+    "yargs": "^17.7.2"
   }
 }

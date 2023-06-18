@@ -4,7 +4,7 @@ Supporting code for an InfluxDB dashboard showing how the Parking Reform Network
 
 This repository is used to ping the relevant APIs and then write those results into InfluxDB. We manage the InfluxDB data and dashboard directly in its Web UI.
 
-The code is not meant to be run locally because of the need for sensitive API keys.
+**WARNING**: When running locally, _do not use production API keys for InfluxDB_. Set up a local InfluxDB instance. It's fine to use production credentials for our API integrations because we only ever read, but please be very careful to never share these keys or upload them online.
 
 ## How tos
 
@@ -28,6 +28,10 @@ Linting checks for common bugs.
 
 You will have to set all relevant environment variables for this to work. Consider using [direnv](https://direnv.net) and an .envrc file. Be careful to never share this file!
 
+Then, choose the services you want to scrape. Run `npm start -- --help` to see the choices.
+
+Finally, run `npm start -- --services service1 service2`, e.g.
+
 ```bash
-❯ npm start
+❯ npm start -- --services map-projects instagram
 ```
