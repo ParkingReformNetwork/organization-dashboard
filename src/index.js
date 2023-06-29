@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { InfluxDB } from "@influxdata/influxdb-client";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
