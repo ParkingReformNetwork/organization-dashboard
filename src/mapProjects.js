@@ -24,4 +24,6 @@ const getPoints = async () => {
   ];
 };
 
-export default getPoints;
+export default {
+  getPoints,
+};

@@ -55,7 +55,7 @@ const getPoints = async (argv) => {
 
   if (argv.services.includes("map-projects")) {
     log("map-projects: starting");
-    const mapPoints = await mapProjects();
+    const mapPoints = await mapProjects.getPoints();
     log("map-projects: finished");
     result.push(...mapPoints);
   }
