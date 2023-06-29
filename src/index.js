@@ -50,12 +50,12 @@ const setUpInflux = (envVars) => {
   );
 };
 
-const getPoints = async (argv) => {
+const getCurrentPoints = async (argv) => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
     log("map-projects: starting");
-    const mapPoints = await mapProjects.getPoints();
+    const mapPoints = await mapProjects.getCurrentPoints();
     log("map-projects: finished");
     result.push(...mapPoints);
   }
@@ -67,7 +67,7 @@ const main = async () => {
   const argv = readArgv();
   const envVars = readEnvVars();
 
-  const result = await getPoints(argv);
+  const result = await getCurrentPoints(argv);
   log(`Result: ${result}`);
 
   if (!argv.write) {
