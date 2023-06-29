@@ -2,7 +2,7 @@
 
 import { Point } from "@influxdata/influxdb-client";
 
-const NOW = Date.now();
+const NOW_S = Math.floor(Date.now() / 1000);
 
 const log = (msg) => {
   const timestamp = new Date().toISOString();
@@ -10,6 +10,6 @@ const log = (msg) => {
 };
 
 const createCountPoint = (measurementName, count) =>
-  new Point(measurementName).intField("count", count).timestamp(NOW);
+  new Point(measurementName).intField("count", count).timestamp(NOW_S);
 
-export { createCountPoint, log, NOW };
+export { createCountPoint, log, NOW_S };
