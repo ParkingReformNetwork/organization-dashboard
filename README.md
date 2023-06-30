@@ -25,7 +25,7 @@ Once you get to the dashboard, save your API key from the top of the screen some
 
 Find your Organization ID number by clicking the P icon in the left sidebar, then "About". Save it somewhere temporarily.
 
-##  Set up environment variables
+## Set up environment variables
 
 In this repository, create the file `.env` and fill in the relevant places:
 
