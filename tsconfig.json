@@ -5,7 +5,8 @@
     "outDir": "./lib",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "incremental": true
+    "incremental": true,
+    "strict": true
   },
   "include": ["src/index.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

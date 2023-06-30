@@ -1,12 +1,28 @@
 import "dotenv/config";
-import { InfluxDB } from "@influxdata/influxdb-client";
+import { InfluxDB, Point, WriteApi } from "@influxdata/influxdb-client";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 
 import { log } from "./utils";
 import mapProjects from "./mapProjects";
 
-const readArgv = () =>
+const EXPECTED_ENV_VARS = {
+  INFLUXDB_URL: "",
+  INFLUXDB_API_TOKEN: "",
+  INFLUXDB_ORG: "",
+  INFLUXDB_BUCKET: "",
+};
+
+type EnvVars = typeof EXPECTED_ENV_VARS;
+
+interface Arguments {
+  [x: string]: unknown;
+  services: string[];
+  historical: string[];
+  write: boolean;
+}
+
+const readArgv = (): Arguments =>
   yargs(hideBin(process.argv))
     .option("services", {
       alias: "s",
@@ -30,23 +46,16 @@ const readArgv = () =>
     })
     .parseSync();
 
-const readEnvVars = () => {
-  const expected = [
-    "INFLUXDB_URL",
-    "INFLUXDB_API_TOKEN",
-    "INFLUXDB_ORG",
-    "INFLUXDB_BUCKET",
-  ];
-  return expected.reduce((acc, envVar) => {
+const readEnvVars = (): EnvVars =>
+  Object.keys(EXPECTED_ENV_VARS).reduce((acc, envVar) => {
     const val = process.env[envVar];
     if (!val) {
       throw new Error(`Environment variable ${envVar} is not set.`);
     }
     return { ...acc, [envVar]: val };
-  }, {});
-};
+  }, {}) as EnvVars;
 
-const setUpInflux = (envVars) => {
+const setUpInflux = (envVars: EnvVars): WriteApi => {
   const influxDB = new InfluxDB({
     url: envVars.INFLUXDB_URL,
     token: envVars.INFLUXDB_API_TOKEN,
@@ -58,7 +67,7 @@ const setUpInflux = (envVars) => {
   );
 };
 
-const getPoints = async (argv) => {
+const getPoints = async (argv: Arguments): Promise<Point[]> => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
@@ -78,7 +87,7 @@ const getPoints = async (argv) => {
   return result;
 };
 
-const main = async () => {
+const main = async (): Promise<void> => {
   const argv = readArgv();
   const envVars = readEnvVars();
 

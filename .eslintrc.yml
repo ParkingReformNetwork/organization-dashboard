@@ -11,6 +11,7 @@ ignorePatterns:
 rules:
   import/no-unresolved: off
   import/extensions: off
+  "@typescript-eslint/explicit-function-return-type": error
 overrides: []
 parserOptions:
   ecmaVersion: latest
