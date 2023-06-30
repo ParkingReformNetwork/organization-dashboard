@@ -13,7 +13,7 @@ This repository is used to ping the relevant APIs and then write those results i
   - On Windows, download Git Bash.
 - [InfluxDB](https://docs.influxdata.com/influxdb/v2.7/install/). It should be running via the program `influxd`. Check that http://localhost:8086 loads.
 
-### Set up InfluxDB account and environment variables
+### Set up InfluxDB account
 
 At http://localhost:8086, create an account:
 
@@ -21,15 +21,19 @@ At http://localhost:8086, create an account:
 - Set Organization Name to "parking-reform-network"
 - Set Bucket Name to "metrics"
 
-Once you get to the dashboard, save your API key from the top of the screen somewhere temporarily. Find your Organization ID number by clicking the P icon in the left sidebar, then "About".
+Once you get to the dashboard, save your API key from the top of the screen somewhere temporarily.
 
-Then, in this repository, create the file `.env` and fill in the relevant places:
+Find your Organization ID number by clicking the P icon in the left sidebar, then "About". Save it somewhere temporarily.
+
+##  Set up environment variables
+
+In this repository, create the file `.env` and fill in the relevant places:
 
 ```txt
 export INFLUXDB_URL=http://localhost:8086
 export INFLUXDB_BUCKET=metrics
-export INFLUXDB_API_TOKEN=<FILL THIS IN>
-export INFLUXDB_ORG=<FILL THIS IN>
+export INFLUXDB_API_TOKEN=REPLACE WITH INFLUX TOKEN
+export INFLUXDB_ORG=REPLACE WITH ORGANIZATION ID
 ```
 
 Be careful to never share the `.env` file!
@@ -62,4 +66,4 @@ Finally, run `npm start -- --services service1 service2`, e.g.
 ❯ npm start -- --services map-projects instagram
 ```
 
-Add `--dry-run` to the command to avoid writing to InfluxDB. The result will be logged to the console. This is especially useful when adding a new service.
+Add `--write` to the command to save the results to InfluxDB. Otherwise, the result will only be logged to the screen, which is useful when iterating on a service.
