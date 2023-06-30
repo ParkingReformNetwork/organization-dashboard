@@ -8,20 +8,26 @@ const MANDATES_CSV =
 const CITIES_JSON =
   "https://raw.githubusercontent.com/ParkingReformNetwork/parking-lot-map/main/data/score-cards.json";
 
-const getPoints = async () => {
-  const [mandatesResponse, cities] = await Promise.all([
-    axios.get(MANDATES_CSV, { responseType: "text" }),
-    axios.get(CITIES_JSON, { responseType: "json" }),
-  ]);
+const parsePoints = (mandatesCsvData, citiesJsonData) => {
+  const mandatesParsedData = Papa.parse(mandatesCsvData, { header: true });
+  const mandateCount = mandatesParsedData.data.length;
 
-  const mandatesData = Papa.parse(mandatesResponse.data, { header: true });
-  const mandateCount = mandatesData.data.length;
-
-  const cityCount = Object.keys(cities.data).length;
+  const cityCount = Object.keys(citiesJsonData).length;
   return [
     createCountPoint("mandates-map-entries", mandateCount),
     createCountPoint("parking-lot-map-entries", cityCount),
   ];
 };
 
-export default getPoints;
+const getCurrentPoints = async () => {
+  const [mandatesResponse, cities] = await Promise.all([
+    axios.get(MANDATES_CSV, { responseType: "text" }),
+    axios.get(CITIES_JSON, { responseType: "json" }),
+  ]);
+  return parsePoints(mandatesResponse.data, cities.data);
+};
+
+export default {
+  getCurrentPoints,
+  parsePoints,
+};

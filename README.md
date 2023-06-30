@@ -24,6 +24,12 @@ Linting checks for common bugs.
 ❯ npm run lint
 ```
 
+### Run tests
+
+```bash
+❯ npm test
+```
+
 ### Run the script
 
 You will have to set all relevant environment variables in `.env` for this to work. Be careful to never share this file!
