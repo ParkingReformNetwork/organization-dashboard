@@ -42,6 +42,14 @@ Be careful to never share the `.env` file!
 
 Run `npm install` before all these commands.
 
+### Check type compilation
+
+```bash
+❯ npm run build
+```
+
+`npm start` and `npm test` will also compile your code.
+
 ### Format code
 
 ```bash

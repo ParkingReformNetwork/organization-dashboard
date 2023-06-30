@@ -2,8 +2,8 @@ import fs from "fs/promises";
 
 import { expect, test } from "@playwright/test";
 
-import mapProjects from "../src/mapProjects.js";
-import { createCountPoint } from "../src/utils.js";
+import mapProjects from "../src/mapProjects";
+import { createCountPoint } from "../src/utils";
 
 test("parsing maps", async () => {
   const mandates = await fs.readFile("tests/mocks/mandates-map.csv", "utf8");
