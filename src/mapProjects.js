@@ -27,9 +27,7 @@ const getCurrentPoints = async () => {
   return parsePoints(mandatesResponse.data, cities.data);
 };
 
-const getHistoricalPoints = async () => {
-  return [];
-};
+const getHistoricalPoints = async () => [];
 
 export default {
   getCurrentPoints,
