@@ -13,7 +13,14 @@ const readArgv = () =>
       type: "array",
       default: [],
       choices: ["map-projects"],
-      description: "Specify the services to scrape",
+      description: "Specify the services to get the current data for",
+    })
+    .option("historical", {
+      alias: "h",
+      type: "array",
+      default: [],
+      choices: ["map-projects"],
+      description: "Specify the services to get historical data for",
     })
     .option("write", {
       alias: "w",
@@ -50,14 +57,21 @@ const setUpInflux = (envVars) => {
   );
 };
 
-const getCurrentPoints = async (argv) => {
+const getPoints = async (argv) => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
-    log("map-projects: starting");
-    const mapPoints = await mapProjects.getCurrentPoints();
-    log("map-projects: finished");
-    result.push(...mapPoints);
+    log("map-projects (current): starting");
+    const points = await mapProjects.getCurrentPoints();
+    log("map-projects (current): finished");
+    result.push(...points);
+  }
+
+  if (argv.historical.includes("map-projects")) {
+    log("map-projects (historical): starting");
+    const points = await mapProjects.getHistoricalPoints();
+    log("map-projects (historical): finished");
+    result.push(...points);
   }
 
   return result;
@@ -67,7 +81,7 @@ const main = async () => {
   const argv = readArgv();
   const envVars = readEnvVars();
 
-  const result = await getCurrentPoints(argv);
+  const result = await getPoints(argv);
   log(`Result: ${result}`);
 
   if (!argv.write) {
