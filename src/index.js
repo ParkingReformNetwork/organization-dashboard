@@ -15,11 +15,11 @@ const readArgv = () =>
       choices: ["map-projects"],
       description: "Specify the services to scrape",
     })
-    .option("dry-run", {
-      alias: "d",
+    .option("write", {
+      alias: "w",
       type: "boolean",
       default: false,
-      description: "Don't write results to InfluxDB",
+      description: "Write results to InfluxDB",
     }).argv;
 
 const readEnvVars = () => {
@@ -70,7 +70,7 @@ const main = async () => {
   const result = await getPoints(argv);
   log(`Result: ${result}`);
 
-  if (argv.dryRun) {
+  if (!argv.write) {
     return;
   }
 
