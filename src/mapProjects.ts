@@ -1,7 +1,7 @@
 import axios from "axios";
 import Papa from "papaparse";
 
-import { createCountPoint } from "./utils.js";
+import { createCountPoint } from "./utils";
 
 const MANDATES_CSV =
   "https://raw.githubusercontent.com/ParkingReformNetwork/mandates-map/main/map/trimmed_map_data.csv";

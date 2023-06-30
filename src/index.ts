@@ -3,8 +3,8 @@ import { InfluxDB } from "@influxdata/influxdb-client";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 
-import { log } from "./utils.js";
-import mapProjects from "./mapProjects.js";
+import { log } from "./utils";
+import mapProjects from "./mapProjects";
 
 const readArgv = () =>
   yargs(hideBin(process.argv))
@@ -27,7 +27,8 @@ const readArgv = () =>
       type: "boolean",
       default: false,
       description: "Write results to InfluxDB",
-    }).argv;
+    })
+    .parseSync();
 
 const readEnvVars = () => {
   const expected = [
