@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+import { exec, ExecOptions } from "child_process";
+
 import { Point } from "@influxdata/influxdb-client";
 
 const NOW_S = Math.floor(Date.now() / 1000);
@@ -18,4 +20,22 @@ const createCountPoint = (
     .intField("count", count)
     .timestamp(timestampInSeconds);
 
-export { createCountPoint, log, NOW_S };
+const runProcess = (
+  cmd: string,
+  options?: ExecOptions
+): Promise<[string, string]> =>
+  new Promise((resolve, reject) => {
+    exec(cmd, options, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error);
+      }
+      if (stdout instanceof Buffer || stderr instanceof Buffer) {
+        return reject(
+          new Error("stdout or stderr is Buffer, which is not supported")
+        );
+      }
+      return resolve([stdout, stderr]);
+    });
+  });
+
+export { createCountPoint, log, runProcess, NOW_S };
