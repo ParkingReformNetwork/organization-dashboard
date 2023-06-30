@@ -12,8 +12,10 @@ const log = (msg: string): void => {
 const createCountPoint = (
   measurementName: string,
   count: number,
-  timestamp_s: number = NOW_S
+  timestampInSeconds: number = NOW_S
 ): Point =>
-  new Point(measurementName).intField("count", count).timestamp(timestamp_s);
+  new Point(measurementName)
+    .intField("count", count)
+    .timestamp(timestampInSeconds);
 
 export { createCountPoint, log, NOW_S };
