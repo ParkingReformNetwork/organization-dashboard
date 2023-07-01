@@ -85,13 +85,6 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
     result.push(...points);
   }
 
-  if (argv.historical.includes("map-projects")) {
-    log("map-projects (historical): starting");
-    const points = await mapProjects.getHistoricalPoints();
-    log("map-projects (historical): finished");
-    result.push(...points);
-  }
-
   return result;
 };
 
