@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc",
     "prestart": "tsc",
-    "start": "node lib\/src\/index.js",
+    "start": "node lib/src/index.js",
     "test": "playwright test",
     "fmt": "prettier --write .",
     "fix": "prettier --write .; eslint --fix .",
