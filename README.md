@@ -45,10 +45,10 @@ Run `npm install` before all these commands.
 ### Check type compilation
 
 ```bash
-❯ npm run build
+❯ npm run check
 ```
 
-`npm start` and `npm test` will also compile your code.
+`npm start` will also compile your code.
 
 ### Format code
 

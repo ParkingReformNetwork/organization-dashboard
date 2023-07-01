@@ -2,9 +2,9 @@
   "name": "organization-dashboard",
   "version": "0.1.0",
   "scripts": {
-    "build": "tsc",
     "prestart": "tsc",
     "start": "node lib/src/index.js",
+    "check": "tsc --noEmit",
     "test": "playwright test",
     "fmt": "prettier --write .",
     "fix": "prettier --write .; eslint --fix .",
