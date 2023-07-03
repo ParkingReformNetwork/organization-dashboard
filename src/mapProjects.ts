@@ -2,7 +2,7 @@ import axios from "axios";
 import { Point } from "@influxdata/influxdb-client";
 import Papa from "papaparse";
 
-import { createCountPoint } from "./utils";
+import { createCountPoint, runProcess } from "./utils";
 
 const MANDATES_CSV =
   "https://raw.githubusercontent.com/ParkingReformNetwork/mandates-map/main/map/trimmed_map_data.csv";
@@ -28,9 +28,14 @@ const getCurrentPoints = async (): Promise<Point[]> => {
   ];
 };
 
-const getHistoricalPoints = async (): Promise<Point[]> => [
-  createCountPoint("mandates-map-entries", 10, 1488417933),
-];
+const getHistoricalPoints = async (): Promise<Point[]> => {
+  const [stdout] = await runProcess(
+    "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
+    { cwd: "../mandates-map" }
+  );
+  console.log(stdout);
+  return [createCountPoint("mandates-map-entries", 10, 1488417933)];
+};
 
 export default {
   getCurrentPoints,
