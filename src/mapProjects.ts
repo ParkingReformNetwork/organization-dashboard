@@ -45,9 +45,9 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
     { cwd: "../mandates-map" }
   );
   const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
-  console.log(commitDatePairs);
-  const point = await getHistoricalPoint("94e2053", "1990-06-29");
-  return [point];
+  return Promise.all(
+    commitDatePairs.map(([commit, date]) => getHistoricalPoint(commit, date))
+  );
 };
 
 export default {
