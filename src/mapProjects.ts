@@ -28,7 +28,9 @@ const getCurrentPoints = async (): Promise<Point[]> => {
   ];
 };
 
-const getHistoricalPoints = async (): Promise<Point[]> => [];
+const getHistoricalPoints = async (): Promise<Point[]> => [
+  createCountPoint("mandates-map-entries", 10, 1488417933),
+];
 
 export default {
   getCurrentPoints,
