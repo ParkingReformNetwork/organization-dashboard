@@ -11,6 +11,11 @@ const log = (msg: string): void => {
   console.log(`[${timestamp}] ${msg}`);
 };
 
+const convertDateToTimeStampS = (date: string): number => {
+  const parsedDate = new Date(date);
+  return Math.floor(parsedDate.getTime() / 1000);
+};
+
 const createCountPoint = (
   measurementName: string,
   count: number,
@@ -38,4 +43,4 @@ const runProcess = (
     });
   });
 
-export { createCountPoint, log, runProcess, NOW_S };
+export { createCountPoint, log, runProcess, convertDateToTimeStampS, NOW_S };
