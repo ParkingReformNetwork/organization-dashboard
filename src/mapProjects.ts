@@ -28,6 +28,13 @@ const getCurrentPoints = async (): Promise<Point[]> => {
   ];
 };
 
+const getHistoricalPoint = async (
+  commit: string,
+  date: string
+): Promise<Point> => {
+  return createCountPoint("mandates-map-entries", 10, 1488417933);
+};
+
 const getHistoricalPoints = async (): Promise<Point[]> => {
   const [stdout] = await runProcess(
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
@@ -35,7 +42,8 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   );
   const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
   console.log(commitDatePairs);
-  return [createCountPoint("mandates-map-entries", 10, 1488417933)];
+  const point = await getHistoricalPoint("94e2053", "2023-06-29");
+  return [point];
 };
 
 export default {
