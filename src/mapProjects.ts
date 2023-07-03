@@ -33,7 +33,8 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
     { cwd: "../mandates-map" }
   );
-  console.log(stdout);
+  const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
+  console.log(commitDatePairs);
   return [createCountPoint("mandates-map-entries", 10, 1488417933)];
 };
 
