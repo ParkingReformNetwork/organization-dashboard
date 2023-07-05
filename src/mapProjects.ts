@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Point } from "@influxdata/influxdb-client";
 import Papa from "papaparse";
+import fs from "fs/promises";
 
 import { createCountPoint, runProcess, convertDateToTimeStampS } from "./utils";
 
@@ -40,6 +41,10 @@ const getHistoricalPoint = async (
 };
 
 const getHistoricalPoints = async (): Promise<Point[]> => {
+  const mandates = await fs.readFile(
+    "/Users/nyahclovis/code/mandates-map/map/tidied_map_data.csv",
+    "utf8"
+  );
   await runProcess("git checkout main", { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
