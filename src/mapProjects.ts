@@ -40,6 +40,7 @@ const getHistoricalPoint = async (
 };
 
 const getHistoricalPoints = async (): Promise<Point[]> => {
+  await runProcess("git checkout main", { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
     { cwd: "../mandates-map" }
