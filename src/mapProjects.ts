@@ -10,9 +10,13 @@ const MANDATES_CSV =
 const CITIES_JSON =
   "https://raw.githubusercontent.com/ParkingReformNetwork/parking-lot-map/main/data/score-cards.json";
 
-const parseMandatesCsv = (csv: string): Point => {
+const parseMandatesCsv = (csv: string, timestamp?: number): Point => {
   const parsed = Papa.parse(csv, { header: true });
-  return createCountPoint("mandates-map-entries", parsed.data.length);
+  return createCountPoint(
+    "mandates-map-entries",
+    parsed.data.length,
+    timestamp
+  );
 };
 
 const parseCitiesJson = (jsonData: Record<string, unknown>): Point =>
@@ -33,18 +37,14 @@ const getMandatesCountForCommit = async (
   commit: string,
   date: string
 ): Promise<Point> => {
-  return createCountPoint(
-    "mandates-map-entries",
-    10,
-    convertDateToTimeStampS(date)
+  const mandates = await fs.readFile(
+    "../mandates-map/map/tidied_map_data.csv",
+    "utf8"
   );
+  return parseMandatesCsv(mandates, convertDateToTimeStampS(date));
 };
 
 const getHistoricalPoints = async (): Promise<Point[]> => {
-  const mandates = await fs.readFile(
-    "/Users/nyahclovis/code/mandates-map/map/tidied_map_data.csv",
-    "utf8"
-  );
   await runProcess("git checkout main", { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
