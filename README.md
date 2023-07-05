@@ -30,10 +30,10 @@ Find your Organization ID number by clicking the P icon in the left sidebar, the
 In this repository, create the file `.env` and fill in the relevant places:
 
 ```txt
-export INFLUXDB_URL=http://localhost:8086
-export INFLUXDB_BUCKET=metrics
-export INFLUXDB_API_TOKEN=REPLACE WITH INFLUX TOKEN
-export INFLUXDB_ORG=REPLACE WITH ORGANIZATION ID
+INFLUXDB_URL=http://localhost:8086
+INFLUXDB_BUCKET=metrics
+INFLUXDB_API_TOKEN=REPLACE WITH INFLUX TOKEN
+INFLUXDB_ORG=REPLACE WITH ORGANIZATION ID
 ```
 
 Be careful to never share the `.env` file!
@@ -45,10 +45,10 @@ Run `npm install` before all these commands.
 ### Check type compilation
 
 ```bash
-❯ npm run build
+❯ npm run check
 ```
 
-`npm start` and `npm test` will also compile your code.
+`npm start` will also compile your code.
 
 ### Format code
 
