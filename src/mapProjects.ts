@@ -29,7 +29,7 @@ const getCurrentPoints = async (): Promise<Point[]> => {
   ];
 };
 
-const getHistoricalPoint = async (
+const getMandatesCountForCommit = async (
   commit: string,
   date: string
 ): Promise<Point> => {
@@ -52,7 +52,9 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   );
   const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
   return Promise.all(
-    commitDatePairs.map(([commit, date]) => getHistoricalPoint(commit, date))
+    commitDatePairs.map(([commit, date]) =>
+      getMandatesCountForCommit(commit, date)
+    )
   );
 };
 
