@@ -45,6 +45,15 @@ const getMandatesCountForCommit = async (
 };
 
 const getHistoricalPoints = async (): Promise<Point[]> => {
+  const repositoryPath = "../mandates-map";
+  try {
+    const stats = await fs.stat(repositoryPath);
+    if (!stats.isDirectory()) {
+      throw new Error("The repository path is not a directory");
+    }
+  } catch (error) {
+    throw new Error("The repository folder does not exist");
+  }
   await runProcess("git checkout main", { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
     "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
