@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { exec, ExecOptions } from "child_process";
+import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 
 import { Point } from "@influxdata/influxdb-client";
 
@@ -22,19 +22,29 @@ const createCountPoint = (
 
 const runProcess = (
   cmd: string,
-  options?: ExecOptions
+  args: string[],
+  options?: SpawnOptionsWithoutStdio
 ): Promise<[string, string]> =>
   new Promise((resolve, reject) => {
-    exec(cmd, options, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error);
+    const child = spawn(cmd, args, options);
+
+    let output = "";
+    child.stdout.on("data", (data) => {
+      output += data;
+    });
+
+    let errorOutput = "";
+    child.stderr.on("data", (data) => {
+      errorOutput += data;
+    });
+
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve([output, errorOutput]);
+      } else {
+        reject(new Error(`Command exited with code ${code}: ${errorOutput}`));
       }
-      if (stdout instanceof Buffer || stderr instanceof Buffer) {
-        return reject(
-          new Error("stdout or stderr is Buffer, which is not supported")
-        );
-      }
-      return resolve([stdout, stderr]);
     });
   });
 
