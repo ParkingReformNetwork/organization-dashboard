@@ -37,6 +37,7 @@ const getMandatesCountForCommit = async (
   commit: string,
   date: string
 ): Promise<Point> => {
+  await runProcess("git", ["checkout", commit], { cwd: "../mandates-map" });
   const mandates = await fs.readFile(
     "../mandates-map/map/tidied_map_data.csv",
     "utf8"
@@ -54,9 +55,15 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   } catch (error) {
     throw new Error("The repository folder does not exist");
   }
-  await runProcess("git checkout main", { cwd: "../mandates-map" });
+  await runProcess("git", ["checkout", "main"], { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
-    "git log --pretty=format:'%h %ad' --date=short map/tidied_map_data.csv",
+    "git",
+    [
+      "log",
+      "--pretty=format:'%h %ad'",
+      "--date=short",
+      "map/tidied_map_data.csv",
+    ],
     { cwd: "../mandates-map" }
   );
   const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
