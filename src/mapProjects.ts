@@ -66,7 +66,9 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
     ],
     { cwd: "../mandates-map" }
   );
-  const commitDatePairs = stdout.split("\n").map((line) => line.split(" "));
+  const commitDatePairs = stdout
+    .split("\n")
+    .map((line) => line.replace(/'/g, "").split(" "));
   return Promise.all(
     commitDatePairs.map(([commit, date]) =>
       getMandatesCountForCommit(commit, date)
