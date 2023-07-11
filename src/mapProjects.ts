@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop  */
 import axios from "axios";
 import { Point } from "@influxdata/influxdb-client";
 import Papa from "papaparse";
@@ -38,10 +40,11 @@ const getMandatesCountForCommit = async (
   date: string
 ): Promise<Point> => {
   await runProcess("git", ["checkout", commit], { cwd: "../mandates-map" });
-  const mandates = await fs.readFile(
-    "../mandates-map/map/tidied_map_data.csv",
-    "utf8"
-  );
+  const fileName =
+    commit === "68bf32e"
+      ? "initial_tidied_map_data.csv"
+      : "tidied_map_data.csv";
+  const mandates = await fs.readFile(`../mandates-map/map/${fileName}`, "utf8");
   return parseMandatesCsv(mandates, convertDateToTimeStampS(date));
 };
 
@@ -69,11 +72,13 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   const commitDatePairs = stdout
     .split("\n")
     .map((line) => line.replace(/'/g, "").split(" "));
-  return Promise.all(
-    commitDatePairs.map(([commit, date]) =>
-      getMandatesCountForCommit(commit, date)
-    )
-  );
+
+  const result = [];
+  for (const [commit, date] of commitDatePairs) {
+    const point = await getMandatesCountForCommit(commit, date);
+    result.push(point);
+  }
+  return result;
 };
 
 export default {
