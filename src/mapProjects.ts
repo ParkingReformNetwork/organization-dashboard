@@ -53,10 +53,14 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   try {
     const stats = await fs.stat(repositoryPath);
     if (!stats.isDirectory()) {
-      throw new Error("The repository path is not a directory");
+      throw new Error(
+        `The repository path "${repositoryPath}" is not a directory. Please provide a valid directory path.`
+      );
     }
   } catch (error) {
-    throw new Error("The repository folder does not exist");
+    throw new Error(
+      `The repository folder does not exist at "${repositoryPath}". Please make sure the directory exists.`
+    );
   }
   await runProcess("git", ["checkout", "main"], { cwd: "../mandates-map" });
   const [stdout] = await runProcess(
