@@ -82,6 +82,29 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
     const point = await getMandatesCountForCommit(commit, date);
     result.push(point);
   }
+
+  // Hardcode the historical data for parking-lots-map because we have so few entries.
+  result.push(
+    createCountPoint(
+      "parking-lot-map-entries",
+      53,
+      convertDateToTimeStampS("2023-7-1")
+    )
+  );
+  result.push(
+    createCountPoint(
+      "parking-lot-map-entries",
+      52,
+      convertDateToTimeStampS("2023-4-6")
+    )
+  );
+  result.push(
+    createCountPoint(
+      "parking-lot-map-entries",
+      51,
+      convertDateToTimeStampS("2023-3-8")
+    )
+  );
   return result;
 };
 
