@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { runProcess } from "../src/utils";
+import { runProcess, convertDateToTimeStampS } from "../src/utils";
 
 test.describe("runProcess", () => {
   test("captures stdout", async () => {
@@ -25,4 +25,9 @@ test.describe("runProcess", () => {
       expect(error).toBeTruthy();
     }
   });
+});
+
+test("convertDateToTimeStampS", () => {
+  const result = convertDateToTimeStampS("1990-06-29");
+  expect(result).toEqual(646617600);
 });
