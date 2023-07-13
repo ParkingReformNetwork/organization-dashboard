@@ -7,6 +7,12 @@ import fs from "fs/promises";
 
 import { createCountPoint, runProcess, convertDateToTimeStampS } from "./utils";
 
+const createParkingLotsPoint = (count: number, date?: string): Point => {
+  const timestamp =
+    date === undefined ? undefined : convertDateToTimeStampS(date);
+  return createCountPoint("parking-lot-map-entries", count, timestamp);
+};
+
 const MANDATES_CSV =
   "https://raw.githubusercontent.com/ParkingReformNetwork/mandates-map/main/map/trimmed_map_data.csv";
 const CITIES_JSON =
@@ -22,7 +28,7 @@ const parseMandatesCsv = (csv: string, timestamp?: number): Point => {
 };
 
 const parseCitiesJson = (jsonData: Record<string, unknown>): Point =>
-  createCountPoint("parking-lot-map-entries", Object.keys(jsonData).length);
+  createParkingLotsPoint(Object.keys(jsonData).length);
 
 const getCurrentPoints = async (): Promise<Point[]> => {
   const [mandatesResponse, cities] = await Promise.all([
@@ -84,27 +90,9 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   }
 
   // Hardcode the historical data for parking-lots-map because we have so few entries.
-  result.push(
-    createCountPoint(
-      "parking-lot-map-entries",
-      53,
-      convertDateToTimeStampS("2023-7-1")
-    )
-  );
-  result.push(
-    createCountPoint(
-      "parking-lot-map-entries",
-      52,
-      convertDateToTimeStampS("2023-4-6")
-    )
-  );
-  result.push(
-    createCountPoint(
-      "parking-lot-map-entries",
-      51,
-      convertDateToTimeStampS("2023-3-8")
-    )
-  );
+  result.push(createParkingLotsPoint(53, "2023-7-1"));
+  result.push(createParkingLotsPoint(52, "2023-4-6"));
+  result.push(createParkingLotsPoint(51, "2023-3-8"));
   return result;
 };
 
