@@ -90,9 +90,11 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
   }
 
   // Hardcode the historical data for parking-lots-map because we have so few entries.
-  result.push(createParkingLotsPoint(53, "2023-7-1"));
-  result.push(createParkingLotsPoint(52, "2023-4-6"));
-  result.push(createParkingLotsPoint(51, "2023-3-8"));
+  result.push(
+    createParkingLotsPoint(53, "2023-7-1"),
+    createParkingLotsPoint(52, "2023-4-6"),
+    createParkingLotsPoint(51, "2023-3-8")
+  );
   return result;
 };
 
