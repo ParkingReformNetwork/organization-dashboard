@@ -2,6 +2,8 @@ import { expect, test } from "@playwright/test";
 
 import { runProcess, convertDateToTimeStampS } from "../src/utils";
 
+import mapProjects from "../../mandates-map";
+
 test.describe("runProcess", () => {
   test("captures stdout", async () => {
     const [stdout, stderr] = await runProcess("echo", ["hello world"]);
@@ -25,6 +27,12 @@ test.describe("runProcess", () => {
       expect(error).toBeTruthy();
     }
   });
+});
+
+test("maps_mandates", async () => {
+  try {
+    await mapProjects()
+  }
 });
 
 test("convertDateToTimeStampS", () => {
