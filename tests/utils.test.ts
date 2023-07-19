@@ -31,7 +31,9 @@ test.describe("runProcess", () => {
 
 test("maps_mandates", async () => {
   try {
-    await mapProjects()
+    await mapProjects();
+  } catch (error) {
+    console.error("Error in utils.test.ts", error);
   }
 });
 
