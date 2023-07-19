@@ -27,14 +27,6 @@ test.describe("runProcess", () => {
   });
 });
 
-test("maps_mandates", async () => {
-  try {
-    await mapProjects();
-  } catch (error) {
-    console.error("Error in utils.test.ts", error);
-  }
-});
-
 test("convertDateToTimeStampS", () => {
   const result = convertDateToTimeStampS("1990-06-29");
   expect(result).toEqual(646617600);
