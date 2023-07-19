@@ -1,0 +1,34 @@
+name: Weekly Updates
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 21 * * SUN"
+
+jobs:
+  weekly:
+    if: github.repository_owner == 'ParkingReformNetwork'
+    runs-on: ubuntu-latest
+    env:
+      ENV_VAR_1: ${{ secrets.INFLUXDB_API_TOKEN }}
+      ENV_VAR_2: ${{ secrets.INFLUXDB_BUCKET }}
+      ENV_VAR_3: ${{ secrets.INFLUXDB_ORG }}
+      ENV_VAR_4: ${{ secrets.INFLUXDB_URL }}
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run progam
+        run: npm run start -- --services --map-projects
+      - name: Set up environment variables
+        run: |
+          echo $ENV_VAR_1
+          echo $ENV_VAR_2
+          echo $ENV_VAR_3
+          echo $ENV_VAR_4
