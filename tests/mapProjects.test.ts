@@ -13,7 +13,7 @@ test("parseCitiesJson", async () => {
 });
 
 test("parseMandatesCsv", async () => {
-  const csv = await fs.readFile("tests/mocks/mandates-map.csv", "utf8");
-  const result = mapProjects.parseMandatesCsv(csv);
-  expect(result).toEqual(createCountPoint("mandates-map-entries", 1552));
+  const csv = await fs.readFile("tests/mocks/reform-map.csv", "utf8");
+  const result = mapProjects.parseReformCsv(csv);
+  expect(result).toEqual(createCountPoint("reform-map-entries", 1552));
 });
