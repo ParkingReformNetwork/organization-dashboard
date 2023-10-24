@@ -20,11 +20,7 @@ const CITIES_JSON =
 
 const parseReformCsv = (csv: string, timestamp?: number): Point => {
   const parsed = Papa.parse(csv, { header: true });
-  return createCountPoint(
-    "reform-map-entries",
-    parsed.data.length,
-    timestamp
-  );
+  return createCountPoint("reform-map-entries", parsed.data.length, timestamp);
 };
 
 const parseCitiesJson = (jsonData: Record<string, unknown>): Point =>
@@ -35,10 +31,7 @@ const getCurrentPoints = async (): Promise<Point[]> => {
     axios.get(REFORM_CSV, { responseType: "text" }),
     axios.get(CITIES_JSON, { responseType: "json" }),
   ]);
-  return [
-    parseReformCsv(reformResponse.data),
-    parseCitiesJson(cities.data),
-  ];
+  return [parseReformCsv(reformResponse.data), parseCitiesJson(cities.data)];
 };
 
 const getReformCountForCommit = async (
