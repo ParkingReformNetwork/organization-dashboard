@@ -13,49 +13,42 @@ const createParkingLotsPoint = (count: number, date?: string): Point => {
   return createCountPoint("parking-lot-map-entries", count, timestamp);
 };
 
-const MANDATES_CSV =
-  "https://raw.githubusercontent.com/ParkingReformNetwork/mandates-map/main/map/trimmed_map_data.csv";
+const REFORM_CSV =
+  "https://raw.githubusercontent.com/ParkingReformNetwork/reform-map/main/map/trimmed_map_data.csv";
 const CITIES_JSON =
   "https://raw.githubusercontent.com/ParkingReformNetwork/parking-lot-map/main/data/score-cards.json";
 
-const parseMandatesCsv = (csv: string, timestamp?: number): Point => {
+const parseReformCsv = (csv: string, timestamp?: number): Point => {
   const parsed = Papa.parse(csv, { header: true });
-  return createCountPoint(
-    "mandates-map-entries",
-    parsed.data.length,
-    timestamp
-  );
+  return createCountPoint("reform-map-entries", parsed.data.length, timestamp);
 };
 
 const parseCitiesJson = (jsonData: Record<string, unknown>): Point =>
   createParkingLotsPoint(Object.keys(jsonData).length);
 
 const getCurrentPoints = async (): Promise<Point[]> => {
-  const [mandatesResponse, cities] = await Promise.all([
-    axios.get(MANDATES_CSV, { responseType: "text" }),
+  const [reformResponse, cities] = await Promise.all([
+    axios.get(REFORM_CSV, { responseType: "text" }),
     axios.get(CITIES_JSON, { responseType: "json" }),
   ]);
-  return [
-    parseMandatesCsv(mandatesResponse.data),
-    parseCitiesJson(cities.data),
-  ];
+  return [parseReformCsv(reformResponse.data), parseCitiesJson(cities.data)];
 };
 
-const getMandatesCountForCommit = async (
+const getReformCountForCommit = async (
   commit: string,
   date: string
 ): Promise<Point> => {
-  await runProcess("git", ["checkout", commit], { cwd: "../mandates-map" });
+  await runProcess("git", ["checkout", commit], { cwd: "../reform-map" });
   const fileName =
     commit === "68bf32e"
       ? "initial_tidied_map_data.csv"
       : "tidied_map_data.csv";
-  const mandates = await fs.readFile(`../mandates-map/map/${fileName}`, "utf8");
-  return parseMandatesCsv(mandates, convertDateToTimeStampS(date));
+  const reform = await fs.readFile(`../reform-map/map/${fileName}`, "utf8");
+  return parseReformCsv(reform, convertDateToTimeStampS(date));
 };
 
 const getHistoricalPoints = async (): Promise<Point[]> => {
-  const repositoryPath = "../mandates-map";
+  const repositoryPath = "../reform-map";
   try {
     const stats = await fs.stat(repositoryPath);
     if (!stats.isDirectory()) {
@@ -68,7 +61,7 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
       `The repository folder does not exist at "${repositoryPath}". Please make sure the directory exists.`
     );
   }
-  await runProcess("git", ["checkout", "main"], { cwd: "../mandates-map" });
+  await runProcess("git", ["checkout", "main"], { cwd: "../reform-map" });
   const [stdout] = await runProcess(
     "git",
     [
@@ -77,7 +70,7 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
       "--date=short",
       "map/tidied_map_data.csv",
     ],
-    { cwd: "../mandates-map" }
+    { cwd: "../reform-map" }
   );
   const commitDatePairs = stdout
     .split("\n")
@@ -85,7 +78,7 @@ const getHistoricalPoints = async (): Promise<Point[]> => {
 
   const result = [];
   for (const [commit, date] of commitDatePairs) {
-    const point = await getMandatesCountForCommit(commit, date);
+    const point = await getReformCountForCommit(commit, date);
     result.push(point);
   }
 
@@ -102,5 +95,5 @@ export default {
   getCurrentPoints,
   getHistoricalPoints,
   parseCitiesJson,
-  parseMandatesCsv,
+  parseReformCsv,
 };
