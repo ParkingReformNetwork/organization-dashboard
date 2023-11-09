@@ -78,10 +78,8 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
     result.push(...points);
   }
 
-  //mastodon, work from here
   if (argv.services.includes("mastodon")) {
     log("mastodon (current): starting");
-    //change to mastodon.getCurrentPoints()
     const points = await mastodon.getCurrentPoints();
     log("mastodon (current): finished");
     result.push(...points);
