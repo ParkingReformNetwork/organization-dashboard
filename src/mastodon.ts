@@ -7,7 +7,6 @@ const mastodon_api =
 
 const getCurrentPoints = async (): Promise<Point[]> => {
   const mastodon_Response = await axios.get(mastodon_api);
-  //console.log(mastodon_Response.data);
 
   const mastodon_followers_point = createCountPoint(
     "mastodon-followers-count",
