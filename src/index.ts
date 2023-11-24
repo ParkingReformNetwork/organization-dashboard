@@ -5,6 +5,7 @@ import { hideBin } from "yargs/helpers";
 
 import { log } from "./utils";
 import mapProjects from "./mapProjects";
+import mastodon from "./mastodon";
 
 const EXPECTED_ENV_VARS = {
   INFLUXDB_URL: "",
@@ -28,7 +29,7 @@ const readArgv = (): Arguments =>
       alias: "s",
       type: "array",
       default: [],
-      choices: ["map-projects"],
+      choices: ["map-projects", "mastodon"],
       description: "Specify the services to get the current data for",
     })
     .option("historical", {
@@ -74,6 +75,13 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
     log("map-projects (current): starting");
     const points = await mapProjects.getCurrentPoints();
     log("map-projects (current): finished");
+    result.push(...points);
+  }
+
+  if (argv.services.includes("mastodon")) {
+    log("mastodon (current): starting");
+    const points = await mastodon.getCurrentPoints();
+    log("mastodon (current): finished");
     result.push(...points);
   }
 
