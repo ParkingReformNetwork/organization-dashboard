@@ -6,6 +6,8 @@ import { hideBin } from "yargs/helpers";
 import { log } from "./utils";
 import mapProjects from "./mapProjects";
 import mastodon from "./mastodon";
+import linkedin from "./linkedin";
+import instagram from "./instagram";
 
 const EXPECTED_ENV_VARS = {
   INFLUXDB_URL: "",
@@ -29,7 +31,7 @@ const readArgv = (): Arguments =>
       alias: "s",
       type: "array",
       default: [],
-      choices: ["map-projects", "mastodon"],
+      choices: ["map-projects", "mastodon", "linkedin", "instagram"],
       description: "Specify the services to get the current data for",
     })
     .option("historical", {
@@ -78,12 +80,24 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
     result.push(...points);
   }
 
-  //mastodon, work from here
   if (argv.services.includes("mastodon")) {
     log("mastodon (current): starting");
-    //change to mastodon.getCurrentPoints()
     const points = await mastodon.getCurrentPoints();
     log("mastodon (current): finished");
+    result.push(...points);
+  }
+
+  if (argv.services.includes("linkedin")) {
+    log("linkedin (current): starting");
+    const points = await linkedin.getCurrentPoints();
+    log("linkedin (current): finished");
+    result.push(points);
+  }
+
+  if (argv.services.includes("instagram")) {
+    log("instagram (current): starting");
+    const points = await instagram.getCurrentPoints();
+    log("instagram (current): finished");
     result.push(...points);
   }
 
