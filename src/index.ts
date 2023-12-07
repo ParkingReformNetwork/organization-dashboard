@@ -14,6 +14,8 @@ const EXPECTED_ENV_VARS = {
   INFLUXDB_API_TOKEN: "",
   INFLUXDB_ORG: "",
   INFLUXDB_BUCKET: "",
+  IG_ACCESS_TOKEN: "",
+  IG_USER_ID: "",
 };
 
 type EnvVars = typeof EXPECTED_ENV_VARS;
@@ -70,7 +72,10 @@ const setUpInflux = (envVars: EnvVars): WriteApi => {
   );
 };
 
-const getPoints = async (argv: Arguments): Promise<Point[]> => {
+const getPoints = async (
+  argv: Arguments,
+  envVars: EnvVars
+): Promise<Point[]> => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
@@ -96,7 +101,7 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
 
   if (argv.services.includes("instagram")) {
     log("instagram (current): starting");
-    const points = await instagram.getCurrentPoints();
+    const points = await instagram.getCurrentPoints(envVars);
     log("instagram (current): finished");
     result.push(...points);
   }
@@ -115,7 +120,7 @@ const main = async (): Promise<void> => {
   const argv = readArgv();
   const envVars = readEnvVars();
 
-  const result = await getPoints(argv);
+  const result = await getPoints(argv, envVars);
   log(`Result: ${result}`);
 
   if (!argv.write) {
