@@ -1,20 +1,11 @@
-import "dotenv/config";
 import { InfluxDB, Point, WriteApi } from "@influxdata/influxdb-client";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 
 import { log } from "./utils";
+import { EnvVars, readEnvVars } from "./envVars";
 import mapProjects from "./mapProjects";
 import mastodon from "./mastodon";
-
-const EXPECTED_ENV_VARS = {
-  INFLUXDB_URL: "",
-  INFLUXDB_API_TOKEN: "",
-  INFLUXDB_ORG: "",
-  INFLUXDB_BUCKET: "",
-};
-
-type EnvVars = typeof EXPECTED_ENV_VARS;
 
 interface Arguments {
   [x: string]: unknown;
@@ -46,15 +37,6 @@ const readArgv = (): Arguments =>
       description: "Write results to InfluxDB",
     })
     .parseSync();
-
-const readEnvVars = (): EnvVars =>
-  Object.keys(EXPECTED_ENV_VARS).reduce((acc, envVar) => {
-    const val = process.env[envVar];
-    if (!val) {
-      throw new Error(`Environment variable ${envVar} is not set.`);
-    }
-    return { ...acc, [envVar]: val };
-  }, {}) as EnvVars;
 
 const setUpInflux = (envVars: EnvVars): WriteApi => {
   const influxDB = new InfluxDB({
