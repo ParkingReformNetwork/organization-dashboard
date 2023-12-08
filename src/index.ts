@@ -1,22 +1,13 @@
-import "dotenv/config";
 import { InfluxDB, Point, WriteApi } from "@influxdata/influxdb-client";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 
 import { log } from "./utils";
+import { EnvVars, readEnvVars } from "./envVars";
 import mapProjects from "./mapProjects";
 import mastodon from "./mastodon";
 import linkedin from "./linkedin";
 import instagram from "./instagram";
-
-const EXPECTED_ENV_VARS = {
-  INFLUXDB_URL: "",
-  INFLUXDB_API_TOKEN: "",
-  INFLUXDB_ORG: "",
-  INFLUXDB_BUCKET: "",
-};
-
-type EnvVars = typeof EXPECTED_ENV_VARS;
 
 interface Arguments {
   [x: string]: unknown;
@@ -49,15 +40,6 @@ const readArgv = (): Arguments =>
     })
     .parseSync();
 
-const readEnvVars = (): EnvVars =>
-  Object.keys(EXPECTED_ENV_VARS).reduce((acc, envVar) => {
-    const val = process.env[envVar];
-    if (!val) {
-      throw new Error(`Environment variable ${envVar} is not set.`);
-    }
-    return { ...acc, [envVar]: val };
-  }, {}) as EnvVars;
-
 const setUpInflux = (envVars: EnvVars): WriteApi => {
   const influxDB = new InfluxDB({
     url: envVars.INFLUXDB_URL,
@@ -70,7 +52,10 @@ const setUpInflux = (envVars: EnvVars): WriteApi => {
   );
 };
 
-const getPoints = async (argv: Arguments): Promise<Point[]> => {
+const getPoints = async (
+  argv: Arguments,
+  envVars: EnvVars
+): Promise<Point[]> => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
@@ -96,7 +81,7 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
 
   if (argv.services.includes("instagram")) {
     log("instagram (current): starting");
-    const points = await instagram.getCurrentPoints();
+    const points = await instagram.getCurrentPoints(envVars);
     log("instagram (current): finished");
     result.push(...points);
   }
@@ -115,7 +100,7 @@ const main = async (): Promise<void> => {
   const argv = readArgv();
   const envVars = readEnvVars();
 
-  const result = await getPoints(argv);
+  const result = await getPoints(argv, envVars);
   log(`Result: ${result}`);
 
   if (!argv.write) {

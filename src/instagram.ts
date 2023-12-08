@@ -1,35 +1,34 @@
-import "dotenv/config";
 import axios from "axios";
 import { Point } from "@influxdata/influxdb-client";
 import { createCountPoint } from "./utils";
+import { EnvVars, readEnvVars } from "./envVars";
 
-const instagramApi = `https://graph.facebook.com/v18.0/${process.env.IG_USER_ID}?fields=followers_count,media_count&`;
-
-const getCurrentPoints = async (): Promise<Point[]> => {
-  const igResponse = await axios.get(
-    instagramApi + "access_token=" + process.env.IG_ACCESS_TOKEN
+const getCurrentPoints = async (envVars: EnvVars): Promise<Point[]> => {
+  const api = `https://graph.facebook.com/v18.0/${envVars.IG_USER_ID}?fields=followers_count,media_count&`;
+  const response = await axios.get(
+    `${api}access_token=${envVars.IG_ACCESS_TOKEN}`
   );
 
-  const instagramFollowersPoint = createCountPoint(
+  const followersPoint = createCountPoint(
     "instagram-followers-count",
-    igResponse.data.followers_count
+    response.data.followers_count
   );
 
-  const instagramPostsPoint = createCountPoint(
+  const postsPoint = createCountPoint(
     "instagram-posts-count",
-    igResponse.data.media_count
+    response.data.media_count
   );
 
-  return [instagramFollowersPoint, instagramPostsPoint];
+  return [followersPoint, postsPoint];
 };
 
 /* a potential way to refresh the access token 
-const instagramRefreshEndpoint =
+const refreshEndpoint =
   "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&";
 
-const refreshIgToken = async () => {
+const refreshIgToken = async (envVars: EnvVars) => {
   const igResponse = await axios.get(
-    instagramRefreshEndpoint + "access_token=" + process.env.IG_ACCESS_TOKEN
+    `${refreshEndpoint}access_token=${envVars.IG_ACCESS_TOKEN}`
   );
   console.log(igResponse.data);
 };
