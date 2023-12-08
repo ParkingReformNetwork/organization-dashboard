@@ -6,6 +6,8 @@ import { log } from "./utils";
 import { EnvVars, readEnvVars } from "./envVars";
 import mapProjects from "./mapProjects";
 import mastodon from "./mastodon";
+import linkedin from "./linkedin";
+import instagram from "./instagram";
 
 interface Arguments {
   [x: string]: unknown;
@@ -20,7 +22,7 @@ const readArgv = (): Arguments =>
       alias: "s",
       type: "array",
       default: [],
-      choices: ["map-projects", "mastodon"],
+      choices: ["map-projects", "mastodon", "linkedin", "instagram"],
       description: "Specify the services to get the current data for",
     })
     .option("historical", {
@@ -50,7 +52,10 @@ const setUpInflux = (envVars: EnvVars): WriteApi => {
   );
 };
 
-const getPoints = async (argv: Arguments): Promise<Point[]> => {
+const getPoints = async (
+  argv: Arguments,
+  envVars: EnvVars
+): Promise<Point[]> => {
   const result = [];
 
   if (argv.services.includes("map-projects")) {
@@ -64,6 +69,20 @@ const getPoints = async (argv: Arguments): Promise<Point[]> => {
     log("mastodon (current): starting");
     const points = await mastodon.getCurrentPoints();
     log("mastodon (current): finished");
+    result.push(...points);
+  }
+
+  if (argv.services.includes("linkedin")) {
+    log("linkedin (current): starting");
+    const points = await linkedin.getCurrentPoints();
+    log("linkedin (current): finished");
+    result.push(points);
+  }
+
+  if (argv.services.includes("instagram")) {
+    log("instagram (current): starting");
+    const points = await instagram.getCurrentPoints(envVars);
+    log("instagram (current): finished");
     result.push(...points);
   }
 
@@ -81,7 +100,7 @@ const main = async (): Promise<void> => {
   const argv = readArgv();
   const envVars = readEnvVars();
 
-  const result = await getPoints(argv);
+  const result = await getPoints(argv, envVars);
   log(`Result: ${result}`);
 
   if (!argv.write) {
