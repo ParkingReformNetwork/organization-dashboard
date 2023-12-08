@@ -22,18 +22,6 @@ const getCurrentPoints = async (envVars: EnvVars): Promise<Point[]> => {
   return [followersPoint, postsPoint];
 };
 
-/* a potential way to refresh the access token 
-const refreshEndpoint =
-  "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&";
-
-const refreshIgToken = async (envVars: EnvVars) => {
-  const igResponse = await axios.get(
-    `${refreshEndpoint}access_token=${envVars.IG_ACCESS_TOKEN}`
-  );
-  console.log(igResponse.data);
-};
-*/
-
 export default {
   getCurrentPoints,
 };
